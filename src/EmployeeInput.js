@@ -6,10 +6,10 @@ export default class EmployeeInput extends Component {
     super(props);
     this.employees = [];
 
-    this.state= {
+    this.state = {
       id: 0,
       incrementalAmount: 0,
-      pay: 0,
+      pay: undefined,
       name: "",
       hourly: false
     }
@@ -21,22 +21,18 @@ export default class EmployeeInput extends Component {
     this.setIncrementalValue = this.setIncrementalValue.bind(this);
   }
 
-  makeSalaried(){
+  makeSalaried(salary){
     if(this.state.hourly){
       this.setState({ hourly: false });
       this.setState({ incrementalAmount: this.state.incrementalAmount/(24*250)})
     }
   }
 
-  makeHourly(){
+  makeHourly(hourlyWage){
     if(!this.state.hourly){
-      this.setState({ incrementalAmount: this.state.incrementalAmount*24*250});
       this.setState({ hourly: true });
+      this.setState({ incrementalAmount: this.state.incrementalAmount*24*250});
     }
-  }
-
-  setName(e){
-    this.setState({ name: e.target.value });
   }
 
   setIncrementalValue(e){
@@ -46,6 +42,10 @@ export default class EmployeeInput extends Component {
     this.setState({ pay: e.target.value });
   }
 
+  setName(e) {
+    this.setState({name: e.target.value});
+  }
+
   add(){
     let newMember = {
       id: this.state.id,
@@ -53,25 +53,29 @@ export default class EmployeeInput extends Component {
       incrementalAmount: this.state.incrementalAmount,
     }
 
-    this.setState({id: this.state.id+1, name: "", incrementalAmount: 0, pay: 0 })
-
-    this.props.add(newMember);
+    if(this.state.name !== "" && this.state.pay > 0){
+      this.props.addPerson(newMember);
+      this.setState({id: this.state.id+1, name: "", incrementalAmount: 0, pay: undefined })
+    } else {
+      alert("Can't add people with no pay or name.")
+    }
   }
 
 
   render() {
     return <div>
       <FormGroup bsSize="large">
-        <FormControl type="text" onChange={ this.setIncrementalValue } value={ this.state.pay } placeholder="Name" />
+        <FormControl type="text" onChange={ this.setName } value={ this.state.name } placeholder="Name" />
       </FormGroup>
       <FormGroup bsSize="large">
-        <FormControl type="text" onChange={ this.setName } value={ this.state.name } placeholder="Name" />
+        <FormControl type="text" onChange={ this.setIncrementalValue } value={ this.state.pay } placeholder="0" />
       </FormGroup>
       <ButtonGroup>
         <Button onClick={this.makeHourly} bsStyle={this.state.hourly ? "primary" : "default"}>Hourly</Button>
         <Button onClick={this.makeSalaried} bsStyle={this.state.hourly ? "default" : "primary"}>Salaried</Button>
       </ButtonGroup>
-      <Button bsStyle="success" onClick={ this.add }>Click to Add Person</Button>
+      <br/>
+      {this.state.name !== "" && this.state.pay > 0 && <Button bsStyle="success" onClick={ this.add }>Click to Add Person</Button>}
     </div>
   }
 }
