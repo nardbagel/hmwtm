@@ -10,8 +10,6 @@ export default class Counter extends React.Component {
     this.reset = this.reset.bind(this);
     this.calculateAmount = this.calculateAmount.bind(this);
 
-    console.log('hello');
-
     this.state = {
       interval: null,
       meetingMembers: [],
