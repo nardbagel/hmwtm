@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 export default class Counter extends React.Component {
   constructor(props) {
@@ -9,7 +9,9 @@ export default class Counter extends React.Component {
     this.pause = this.pause.bind(this);
     this.reset = this.reset.bind(this);
     this.calculateAmount = this.calculateAmount.bind(this);
-    
+
+    console.log('hello');
+
     this.state = {
       interval: null,
       meetingMembers: [],
@@ -25,37 +27,38 @@ export default class Counter extends React.Component {
     this.setState({ runningAmount: this.state.updateAmount * time * 10 });
   }
 
-  start(){
-    this.setState({running: true});
-    this.setState({startTime: new Date().getTime()});
+  start() {
+    this.setState({ running: true });
+    this.setState({ startTime: new Date().getTime() });
     this.setState({
       interval: setInterval(() => {
-      this.update();
-    }, 100)});
+        this.update();
+      }, 100)
+    });
   }
 
-  pause(){
+  pause() {
     clearInterval(this.state.interval);
-    this.setState({running: false});
+    this.setState({ running: false });
   }
 
-  reset(){
+  reset() {
     this.pause();
     this.setState({ runningAmount: 0 });
   }
 
-  calculateAmount(){
-        let tempAmt = 0
-        this.props.people.map((p) => tempAmt += p.incrementalAmount );
-        this.setState({ updateAmount: tempAmt });
+  calculateAmount() {
+    let tempAmt = 0
+    this.props.people.map((p) => tempAmt += p.incrementalAmount);
+    this.setState({ updateAmount: tempAmt });
   }
 
   render() {
     return (
-    <div>
-      <div>${ this.state.runningAmount.toFixed(2) }</div>
-      <div>{ this.state.updateAmount }</div>
-      {this.state.running ? <Button onClick={this.pause} bsStyle="danger">Pause</Button> : <Button onClick={this.start} bsStyle="success">Start</Button>}
-    </div>);
+      <div>
+        <div>${this.state.runningAmount.toFixed(2)}</div>
+        <div>{this.state.updateAmount}</div>
+        {this.state.running ? <Button onClick={this.pause} bsStyle="danger">Pause</Button> : <Button onClick={this.start} bsStyle="success">Start</Button>}
+      </div>);
   }
 }
